@@ -1,4 +1,4 @@
-.board {
+#board {
   display: grid;
   text-align: center;
   grid-template-rows: 50px 50px 50px;
