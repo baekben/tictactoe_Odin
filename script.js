@@ -1,5 +1,9 @@
+const turn = document.getElementById('turn');
+const player = (name, icon) => {
+  return { name, icon };
+};
 const gameBoard = (() => {
-  const board = ['', '', '', '', '', '', '', '', '']; //3x3
+  const board = []; //3x3
   const winCombo = [
     [0, 1, 2],
     [3, 4, 5],
@@ -14,88 +18,105 @@ const gameBoard = (() => {
   //const resetBoards = (currentboard) =>(//additems for current board here)
   return { board, winCombo };
 })();
-const player = (name, icon) => {
-  const getName = () => name; //player name
-  const getIcon = () => icon; //Icon will be either X or O
-  //a variable for move once clicked on a square;
-  return { getName, getIcon };
-};
 
 const displayController = (() => {
   //displays gameboard on screen
-  var player = 1;
 
+  var current = 1;
   const screenBoard = document.getElementById('board');
-  const turn = document.getElementById('turn');
   const playerMark = (event) => {
     var value = event.target;
     const box = value.getAttribute('data-square');
     if (value.innerHTML == '') {
-      if (player == 1) {
+      if (current == 1) {
         value.innerHTML = 'X';
-        player = 2;
+        current = 2;
       } else {
         value.innerHTML = 'O';
-        player = 1;
+        current = 1;
       }
       //player 1 and player 2 will be O
     } else {
       alert('Error');
     }
     gameBoard.board[box] = value.innerHTML;
-    turn.innerHTML = `Player ${player}'s turn`;
-    console.log(`Player ${player}'s turn`);
-    return player;
+    return { current };
   };
   const gameUpdate = (e) => {
     //squares = e.target.querySelectorAll('.square');
     box = e.target.getAttribute('data-square');
-    console.log(gameBoard);
   };
 
-  return { screenBoard, playerMark, gameUpdate, player };
+  return { screenBoard, playerMark, gameUpdate };
 })();
 
 const gameController = (() => {
   //tracks game
+  const win = gameBoard.winCombo;
+  const start = document.querySelector('#start');
+  const reset = document.querySelector('#reset');
 
-  const dc = displayController;
-  const gb = gameBoard;
-  const win = gb.winCombo;
-  const board = gb.board;
-  dc.screenBoard.addEventListener('click', (e) => {
-    dc.playerMark(e);
-    dc.gameUpdate(e);
-    checkWin();
-    console.log('Ran checkwin');
+  start.addEventListener('click', () => {
+    console.log('start');
+    let one = prompt("Player One's Name:");
+    let two = prompt("Player Two's Name:");
+    playerOne = player(one, 'X');
+    playerTwo = player(two, 'O');
+    console.log(
+      `Player One: ${playerOne.name} :: Player Two: ${playerTwo.name}`
+    );
+    turn.innerHTML = `${playerOne.name}'s turn`;
+    turn.style.display = 'block';
+    document.getElementById('board').style.display = 'grid';
+    document.getElementById('start').style.display = 'none';
   });
+
+  reset.addEventListener('click', () => {
+    console.log('reset');
+    gameBoard.board = [];
+    var currentBoard = document.getElementsByClassName('square');
+    for (i = 0; i < currentBoard.length; i++) {
+      currentBoard[i].innerHTML = '';
+    }
+    console.log('board: ' + gameBoard.board);
+    console.log('resetboard: ' + gameBoard.resetBoard);
+  });
+
+  displayController.screenBoard.addEventListener('click', (e) => {
+    let mark = displayController.playerMark(e);
+    if (mark.current == 1) {
+      turn.innerHTML = `${playerOne.name}'s turn`;
+    } else if (mark.current == 2) {
+      turn.innerHTML = `${playerTwo.name}'s turn`;
+    }
+    displayController.gameUpdate(e);
+    checkWin();
+    console.log('Ran checkWin');
+    console.log('Game board:' + gameBoard.board);
+  });
+
   function checkWin() {
+    //checks if there are three in a row
     win.map((combination) => {
       let [a, b, c] = combination;
-      if (board[a] == 'X' && board[b] == 'X' && board[c] == 'X') {
+      if (
+        gameBoard.board[a] == 'X' &&
+        gameBoard.board[b] == 'X' &&
+        gameBoard.board[c] == 'X'
+      ) {
         console.log("'Three in a row of X's");
-      } else if (board[a] == 'O' && board[b] == 'O' && board[c] == 'O') {
+        alert(`${playerOne.name} wins`);
+      } else if (
+        gameBoard.board[a] == 'O' &&
+        gameBoard.board[b] == 'O' &&
+        gameBoard.board[c] == 'O'
+      ) {
         console.log("Three in a row of O's");
+        alert(`${playerTwo.name} wins`);
       }
+      //After message pops up foute to a play again/quit
+      //display element to congradulate winner
     });
-    // console.log(board);
-    // for (i = 0; i < win.length; i++) {
-    //   for (j = 0; j < win[i].length; j++) {
-    //     if (board[win[i][j]].includes('X')) {
-    //       console.log(board[win[i]]);
-    //       x++;
-    //     } else if (board[win[i][j]].includes('O')) {
-    //       o++;
-    //     }
-    //   }
-    // console.log(`X: ${x}; O: ${o}`);
-    // if (board[win[i].includes('X', 'X', 'X')]) {
-    //   console.log('Three in a row ');
-    //   break;
-    // }
-    //}
   }
-
   //has start/restart button
-  //display element to congradulate winner
 })();
