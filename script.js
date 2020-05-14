@@ -54,12 +54,16 @@ const gameController = (() => {
   //tracks game
   const win = gameBoard.winCombo;
   const start = document.querySelector('#start');
-  const reset = document.querySelector('#reset');
+  const resetButton = document.querySelector('#reset');
 
   start.addEventListener('click', () => {
     console.log('start');
     let one = prompt("Player One's Name:");
     let two = prompt("Player Two's Name:");
+    if ((one || two) == (null || '')) {
+      one = prompt("Please enter a name\nPlayer One's Name: ");
+      two = prompt("Player Two's Name: ");
+    }
     playerOne = player(one, 'X');
     playerTwo = player(two, 'O');
     console.log(
@@ -69,18 +73,38 @@ const gameController = (() => {
     turn.style.display = 'block';
     document.getElementById('board').style.display = 'grid';
     document.getElementById('start').style.display = 'none';
+    document.getElementById('reset').style.display = 'inline-block';
   });
 
-  reset.addEventListener('click', () => {
+  resetButton.addEventListener('click', () => {
     console.log('reset');
+    reset();
+    console.log('board: ' + gameBoard.board);
+  });
+
+  function reset() {
     gameBoard.board = [];
     var currentBoard = document.getElementsByClassName('square');
     for (i = 0; i < currentBoard.length; i++) {
       currentBoard[i].innerHTML = '';
     }
-    console.log('board: ' + gameBoard.board);
-    console.log('resetboard: ' + gameBoard.resetBoard);
-  });
+  }
+
+  function playAgain() {
+    document.getElementById('reset').style.display = 'none';
+    document.getElementById('board').disabled = true;
+    if (confirm('Play Again?')) {
+      console.log('play again');
+      reset();
+    } else {
+      console.log("don't play again");
+      reset();
+      document.getElementById('board').disabled = true;
+      document.getElementById('start').style.display = 'block';
+    }
+
+    // document.getElementById('status').innerHTML = 'Play Again?';
+  }
 
   displayController.screenBoard.addEventListener('click', (e) => {
     let mark = displayController.playerMark(e);
@@ -97,6 +121,12 @@ const gameController = (() => {
 
   function checkWin() {
     //checks if there are three in a row
+    var boardMax = 9;
+    if (gameBoard.board.length == boardMax) {
+      document.getElementById('winner').innerHTML = "It's a tie.";
+      console.log('Play again message would appear after');
+      playAgain();
+    }
     win.map((combination) => {
       let [a, b, c] = combination;
       if (
@@ -105,18 +135,25 @@ const gameController = (() => {
         gameBoard.board[c] == 'X'
       ) {
         console.log("'Three in a row of X's");
-        alert(`${playerOne.name} wins`);
+        document.getElementById(
+          'winner'
+        ).innerHTML = `${playerOne.name} wins!!`;
+        playAgain();
       } else if (
         gameBoard.board[a] == 'O' &&
         gameBoard.board[b] == 'O' &&
         gameBoard.board[c] == 'O'
       ) {
         console.log("Three in a row of O's");
-        alert(`${playerTwo.name} wins`);
+        document.getElementById(
+          'winner'
+        ).innerHTML = `${playerTwo.name} wins!!`;
+        playAgain();
       }
-      //After message pops up foute to a play again/quit
-      //display element to congradulate winner
     });
+
+    //After message pops up foute to a play again/quit
+    //display element to congradulate winner
   }
   //has start/restart button
 })();

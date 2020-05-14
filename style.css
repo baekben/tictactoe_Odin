@@ -1,15 +1,29 @@
+#notes,
+#buttons {
+  text-align: center;
+  padding-bottom: 20px;
+}
 #board {
   display: none;
   text-align: center;
-  grid-template-rows: 50px 50px 50px;
-  grid-template-columns: 50px 50px 50px;
+  justify-content: center;
+  grid-template-rows: 75px 75px 75px;
+  grid-template-columns: 75px 75px 75px;
+}
+#board.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  background: #cccccc;
 }
 #turn {
   display: none;
 }
+#reset {
+  display: none;
+}
 
 .square {
-  font-size: 45px;
+  font-size: 75px;
   display: inline-block;
   background: grey;
   border: 1px solid black;
