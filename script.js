@@ -55,6 +55,9 @@ const gameController = (() => {
   const win = gameBoard.winCombo;
   const start = document.querySelector('#start');
   const resetButton = document.querySelector('#reset');
+  var oneScore = 0;
+  var twoScore = 0;
+  var tieScore = 0;
 
   start.addEventListener('click', () => {
     console.log('start');
@@ -66,6 +69,12 @@ const gameController = (() => {
     }
     playerOne = player(one, 'X');
     playerTwo = player(two, 'O');
+    document.getElementById(
+      'playerOne'
+    ).firstChild.nodeValue = `${playerOne.name}`;
+    document.getElementById(
+      'playerTwo'
+    ).firstChild.nodeValue = `${playerTwo.name}`;
     console.log(
       `Player One: ${playerOne.name} :: Player Two: ${playerTwo.name}`
     );
@@ -76,6 +85,18 @@ const gameController = (() => {
     document.getElementById('reset').style.display = 'inline-block';
   });
 
+  function updateScore(pOne, pTwo, pTied) {
+    console.log(`One: ${pOne}, Two: ${pTwo}, Tied: ${pTied}`);
+
+    const pOneScore = document.getElementById('scoreOne');
+    const pTwoScore = document.getElementById('scoreTwo');
+    const tiedScore = document.getElementById('tied');
+
+    pOneScore.innerHTML = pOne;
+    pTwoScore.innerHTML = pTwo;
+    tiedScore.innerHTML = pTied;
+  }
+
   resetButton.addEventListener('click', () => {
     console.log('reset');
     reset();
@@ -84,26 +105,35 @@ const gameController = (() => {
 
   function reset() {
     gameBoard.board = [];
+    document.getElementById('reset').style.display = 'inline-block';
     var currentBoard = document.getElementsByClassName('square');
     for (i = 0; i < currentBoard.length; i++) {
       currentBoard[i].innerHTML = '';
     }
   }
 
-  function playAgain() {
+  function playAgain(score) {
+    console.log('score' + score);
     document.getElementById('reset').style.display = 'none';
-    document.getElementById('board').disabled = true;
     if (confirm('Play Again?')) {
-      console.log('play again');
+      console.log('Play again');
+      if (score == 'one') {
+        oneScore++;
+      } else if (score == 'two') {
+        twoScore++;
+      } else if (score == 'tie') {
+        tieScore++;
+      }
+      updateScore(oneScore, twoScore, tieScore);
       reset();
     } else {
-      console.log("don't play again");
+      console.log("Don't play again");
+      oneScore = 0;
+      twoScore = 0;
+      tieScore = 0;
       reset();
-      document.getElementById('board').disabled = true;
       document.getElementById('start').style.display = 'block';
     }
-
-    // document.getElementById('status').innerHTML = 'Play Again?';
   }
 
   displayController.screenBoard.addEventListener('click', (e) => {
@@ -122,10 +152,14 @@ const gameController = (() => {
   function checkWin() {
     //checks if there are three in a row
     var boardMax = 9;
-    if (gameBoard.board.length == boardMax) {
+    var boardCheck = gameBoard.board;
+    var filtered = boardCheck.filter(function (el) {
+      return el != null;
+    });
+    if (filtered.length === boardMax) {
       document.getElementById('winner').innerHTML = "It's a tie.";
       console.log('Play again message would appear after');
-      playAgain();
+      playAgain('tie');
     }
     win.map((combination) => {
       let [a, b, c] = combination;
@@ -138,7 +172,7 @@ const gameController = (() => {
         document.getElementById(
           'winner'
         ).innerHTML = `${playerOne.name} wins!!`;
-        playAgain();
+        playAgain('one');
       } else if (
         gameBoard.board[a] == 'O' &&
         gameBoard.board[b] == 'O' &&
@@ -148,7 +182,7 @@ const gameController = (() => {
         document.getElementById(
           'winner'
         ).innerHTML = `${playerTwo.name} wins!!`;
-        playAgain();
+        playAgain('two');
       }
     });
 
