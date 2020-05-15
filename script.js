@@ -180,6 +180,7 @@ const gameController = (() => {
         document.getElementById(
           'winner'
         ).innerHTML = `${playerOne.name} wins!!`;
+        alert(`${playerOne.name} wins!!`);
         playAgain('one');
       } else if (
         gameBoard.board[a] == 'O' &&
@@ -190,6 +191,7 @@ const gameController = (() => {
         document.getElementById(
           'winner'
         ).innerHTML = `${playerTwo.name} wins!!`;
+        alert(`${playerTwo.name} wins!!`);
         playAgain('two');
       }
     });
