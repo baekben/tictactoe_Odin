@@ -1,13 +1,37 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+h1 {
+  font-size: 60px;
+}
+h2 {
+  font-size: 40px;
+}
 #notes,
 #buttons {
   text-align: center;
-  padding-bottom: 20px;
+  padding-bottom: 5px;
+}
+#score {
+  font-size: 20px;
+}
+#buttons {
+  padding-top: 15px;
+}
+button {
+  background-color: #ff9800;
+  color: #000000;
+  font-size: 25px;
+  border-radius: 8px;
+  border: none;
 }
 .players {
+  background-color: #03a9fa;
+  border: 1px solid black;
   text-decoration: underline;
   text-align: center;
-  display: inline-block;
-  padding-right: 15px;
+  display: none;
+  padding: 0px 20px 0px 15px;
 }
 #score {
   margin-left: auto;
@@ -23,11 +47,6 @@
   grid-template-rows: 75px 75px 75px;
   grid-template-columns: 75px 75px 75px;
 }
-#board.disabled {
-  pointer-events: none;
-  opacity: 0.5;
-  background: #cccccc;
-}
 #turn {
   display: none;
 }
@@ -38,8 +57,11 @@
 .square {
   font-size: 75px;
   display: inline-block;
-  background: grey;
-  border: 1px solid black;
+  background: #03a9fa;
+  border: 2px solid #000000;
   align-items: center;
   justify-content: center;
+}
+footer {
+  text-align: center;
 }

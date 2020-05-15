@@ -59,6 +59,16 @@ const gameController = (() => {
   var twoScore = 0;
   var tieScore = 0;
 
+  function hiddenDisplay() {
+    var scoreboard = document.getElementsByClassName('players');
+    for (let i = 0; i < scoreboard.length; i++) {
+      scoreboard[i].style.display = 'inline-block';
+    }
+    document.getElementById('board').style.display = 'grid';
+    document.getElementById('start').style.display = 'none';
+    document.getElementById('reset').style.display = 'inline-block';
+  }
+
   start.addEventListener('click', () => {
     console.log('start');
     let one = prompt("Player One's Name:");
@@ -80,9 +90,7 @@ const gameController = (() => {
     );
     turn.innerHTML = `${playerOne.name}'s turn`;
     turn.style.display = 'block';
-    document.getElementById('board').style.display = 'grid';
-    document.getElementById('start').style.display = 'none';
-    document.getElementById('reset').style.display = 'inline-block';
+    hiddenDisplay();
   });
 
   function updateScore(pOne, pTwo, pTied) {
@@ -185,9 +193,5 @@ const gameController = (() => {
         playAgain('two');
       }
     });
-
-    //After message pops up foute to a play again/quit
-    //display element to congradulate winner
   }
-  //has start/restart button
 })();
